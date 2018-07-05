@@ -71,7 +71,7 @@
         daypicker.value = dayNow
       }
 
-      output.innerText = `${notInitial ? 'Simulating' : 'Today is'} week ${Math.floor(daypicker.value / 7)}${daypicker.value % 7 ? '+' + daypicker.value % 7 : ''}.\nProbability* of going to holiday on next week is ${probabilityForDay(daypicker.value)}%.`
+      output.innerText = `${notInitial ? 'Simulating' : 'Today is'} week ${Math.floor(daypicker.value / 7)}${daypicker.value % 7 ? '+' + daypicker.value % 7 : ''}.\nProbability* of giving labour on next week is ${probabilityForDay(daypicker.value)}%.`
     }
 
     function probabilityForDay(day) {
