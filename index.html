@@ -47,6 +47,10 @@
   <label>Simulation:
     <input type="range" min="245" max="294" step="1" id="daypicker">
   </label>
+  <label>I'm the:
+    <input type="radio" id="father" name="parent" checked /> father
+    <input type="radio" id="mother" name="parent" /> mother
+  </label>
   <div>
     <small>*) Probability is from dataset of
       <a href="https://spacefem.com/pregnant/charts/duedate6.php">daily probabilities of spontaneous labor, on women with no previous birts</a>
@@ -62,6 +66,10 @@
     const daypicker = document.getElementById('daypicker')
     const output = document.getElementById('output')
     daypicker.addEventListener('input', showDate)
+    const father = document.getElementById('father')
+    father.addEventListener('change', showDate)
+    const mother = document.getElementById('mother')
+    mother.addEventListener('change', showDate)
 
     function showDate(notInitial) {
       const start = new Date(duedate.value) - 1000 * 60 * 60 * 24 * 7 * 40
@@ -71,7 +79,7 @@
         daypicker.value = dayNow
       }
 
-      output.innerText = `${notInitial ? 'Simulating' : 'Today is'} week ${Math.floor(daypicker.value / 7)}${daypicker.value % 7 ? '+' + daypicker.value % 7 : ''}.\nProbability* of giving labour on next week is ${probabilityForDay(daypicker.value)}%.`
+      output.innerText = `${notInitial ? 'Simulating' : 'Today is'} week ${Math.floor(daypicker.value / 7)}${daypicker.value % 7 ? '+' + daypicker.value % 7 : ''}.\nProbability* of ${father.checked ? 'going on paternity leave' : 'giving labour'} on next week is ${probabilityForDay(daypicker.value)}%.`
     }
 
     function probabilityForDay(day) {
