@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Labour propability calculator</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+      background: #E6E6E6;
+      color: #39393A;
+      font: 100 30px sans-serif;
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    label {
+      font-size: 0.5em;
+    }
+
+    #output {
+      margin-bottom: 40px;
+    }
+
+    small {
+      font-size: 0.3em;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="output"></div>
+
+  <label>Due date:
+    <input type="date" value="2018-08-04" id="duedate" />
+  </label>
+  <label>Simulation:
+    <input type="range" min="245" max="294" step="1" id="daypicker">
+  </label>
+  <div>
+    <small>*) Probability is from dataset of
+      <a href="https://spacefem.com/pregnant/charts/duedate6.php">daily probabilities of spontaneous labor, on women with no previous birts</a>
+    </small>
+  </div>
+
+  <script>
+    const data = { "245": "14", "246": "17", "247": "9", "248": "18", "249": "17", "250": "17", "251": "17", "252": "33", "253": "25", "254": "22", "255": "33", "256": "21", "257": "24", "258": "35", "259": "58", "260": "49", "261": "52", "262": "73", "263": "79", "264": "70", "265": "93", "266": "115", "267": "106", "268": "112", "269": "145", "270": "190", "271": "167", "272": "183", "273": "241", "274": "231", "275": "233", "276": "284", "277": "310", "278": "320", "279": "367", "280": "454", "281": "428", "282": "340", "283": "334", "284": "320", "285": "340", "286": "318", "287": "326", "288": "259", "289": "187", "290": "175", "291": "152", "292": "91", "293": "91", "294": 56 + 20 + 20 + 15 + 8 + 7 + 7 }
+
+
+    const duedate = document.getElementById('duedate')
+    duedate.addEventListener('change', () => showDate())
+    const daypicker = document.getElementById('daypicker')
+    const output = document.getElementById('output')
+    daypicker.addEventListener('input', showDate)
+
+    function showDate(notInitial) {
+      const start = new Date(duedate.value) - 1000 * 60 * 60 * 24 * 7 * 40
+      const dayNow = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24))
+
+      if (!notInitial) {
+        daypicker.value = dayNow
+      }
+
+      output.innerText = `${notInitial ? 'Simulating' : 'Today is'} week ${Math.floor(daypicker.value / 7)}${daypicker.value % 7 ? '+' + daypicker.value % 7 : ''}.\nProbability* of going to holiday on next week is ${probabilityForDay(daypicker.value)}%.`
+    }
+
+    function probabilityForDay(day) {
+      const nowKey = Object.keys(data).indexOf(day.toString())
+      const remaining = Object.values(data).slice(nowKey).map(Number)
+
+      const sum = (a, b) => a + b
+
+      const nextWeek = remaining.slice(0, 7).reduce(sum)
+      const all = remaining.reduce(sum)
+
+      const probabilityNextWeek = nextWeek / all
+
+      return Math.round(probabilityNextWeek * 1000) / 10
+    }
+
+    showDate()
+  </script>
+</body>
